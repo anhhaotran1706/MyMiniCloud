@@ -1,0 +1,178 @@
+# docker-compose.yml  (Phần 1 + Phần 2 hợp nhất)
+# Chạy trên EC2: đặt biến PUBLIC_HOST=<public IP> trong file .env (mặc định: localhost)
+networks: { cloud-net: { name: cloud-net } }
+
+services:
+  # ───────────────────────────────────────────────────────────────
+  # 1) Web Frontend Server (Nginx tĩnh – blog cá nhân 3 bài)
+  # ───────────────────────────────────────────────────────────────
+  web-frontend-server:
+    build: ./web-frontend-server
+    image: hotensv/web:dev
+    container_name: web-frontend-server
+    networks: [cloud-net]
+    ports: [ "8080:80" ]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 10) Hai web server cho bài cân bằng tải (Load Balancer)
+  # ───────────────────────────────────────────────────────────────
+  web-frontend-server1:
+    image: nginx:stable
+    container_name: web-frontend-server1
+    volumes:
+      - ./web-frontend-server1/html:/usr/share/nginx/html:ro
+    networks: [cloud-net]
+    ports: [ "8082:80" ]
+    restart: unless-stopped
+
+  web-frontend-server2:
+    image: nginx:stable
+    container_name: web-frontend-server2
+    volumes:
+      - ./web-frontend-server2/html:/usr/share/nginx/html:ro
+    networks: [cloud-net]
+    ports: [ "8083:80" ]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 2) Application Backend Server (Flask API + /student + /students-db)
+  # ───────────────────────────────────────────────────────────────
+  application-backend-server:
+    build: ./application-backend-server
+    image: hotensv/app:dev
+    container_name: application-backend-server
+    networks: [cloud-net]
+    ports: [ "8085:8081" ]
+    environment:
+      OIDC_ISSUER:   "http://${PUBLIC_HOST:-localhost}:8081/realms/realm_sv001"
+      OIDC_JWKS_URL: "http://authentication-identity-server:8080/realms/realm_sv001/protocol/openid-connect/certs"
+      OIDC_AUDIENCE: "flask-app"
+      DB_HOST: "relational-database-server"
+      DB_USER: "root"
+      DB_PASSWORD: "root"
+      DB_NAME: "studentdb"
+    depends_on:
+      - relational-database-server
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 3) Relational Database Server (MariaDB – minicloud + studentdb)
+  # ───────────────────────────────────────────────────────────────
+  relational-database-server:
+    image: mariadb:11
+    container_name: relational-database-server
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: minicloud
+    volumes:
+      - ./relational-database-server/init:/docker-entrypoint-initdb.d:ro
+      - db-data:/var/lib/mysql
+    ports: [ "3306:3306" ]
+    networks: [cloud-net]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 4) Authentication Identity Server (Keycloak – realm_sv001)
+  # ───────────────────────────────────────────────────────────────
+  authentication-identity-server:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: authentication-identity-server
+    command: [ "start-dev", "--import-realm" ]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: "${PUBLIC_HOST:-localhost}"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    volumes:
+      - ./authentication-identity-server/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    ports: [ "8081:8080" ]
+    restart: unless-stopped
+    networks: [cloud-net]
+
+  # ───────────────────────────────────────────────────────────────
+  # 5) Object Storage Server (MinIO – bucket profile-pics)
+  # ───────────────────────────────────────────────────────────────
+  object-storage-server:
+    image: minio/minio
+    container_name: object-storage-server
+    command: [ "server", "/data", "--console-address", ":9001" ]
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - ./object-storage-server/data:/data
+    ports: [ "9000:9000", "9001:9001" ]
+    networks: [cloud-net]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 6) Internal DNS Server (Bind9 – cloud.local)
+  # ───────────────────────────────────────────────────────────────
+  internal-dns-server:
+    image: internetsystemsconsortium/bind9:9.18
+    container_name: internal-dns-server
+    ports: [ "1053:53/udp", "1053:53/tcp" ]
+    volumes:
+      - ./internal-dns-server/named.conf:/etc/bind/named.conf:ro
+      - ./internal-dns-server/named.conf.options:/etc/bind/named.conf.options:ro
+      - ./internal-dns-server/named.conf.local:/etc/bind/named.conf.local:ro
+      - ./internal-dns-server/db.cloud.local:/etc/bind/db.cloud.local:ro
+    networks: [cloud-net]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 7) Node Exporter (xuất metric cho Prometheus)
+  # ───────────────────────────────────────────────────────────────
+  monitoring-node-exporter-server:
+    image: prom/node-exporter:latest
+    container_name: monitoring-node-exporter-server
+    ports: [ "9100:9100" ]
+    networks: [cloud-net]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 7) Monitoring Prometheus Server
+  # ───────────────────────────────────────────────────────────────
+  monitoring-prometheus-server:
+    image: prom/prometheus:latest
+    container_name: monitoring-prometheus-server
+    ports: [ "9090:9090" ]
+    volumes:
+      - ./monitoring-prometheus-server/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks: [cloud-net]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 8) Grafana Dashboard Server (provisioned datasource + dashboard)
+  # ───────────────────────────────────────────────────────────────
+  monitoring-grafana-dashboard-server:
+    image: grafana/grafana:latest
+    container_name: monitoring-grafana-dashboard-server
+    ports: [ "3000:3000" ]
+    volumes:
+      - ./monitoring-grafana-dashboard-server/provisioning:/etc/grafana/provisioning:ro
+    networks: [cloud-net]
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────
+  # 9) API Gateway / Reverse Proxy (Nginx – routing + load balancer)
+  # ───────────────────────────────────────────────────────────────
+  api-gateway-proxy-server:
+    image: nginx:stable
+    container_name: api-gateway-proxy-server
+    depends_on:
+      - web-frontend-server
+      - web-frontend-server1
+      - web-frontend-server2
+      - application-backend-server
+      - authentication-identity-server
+    ports: [ "80:80" ]
+    volumes:
+      - ./api-gateway-proxy-server/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks: [cloud-net]
+    restart: unless-stopped
+
+volumes:
+  db-data:

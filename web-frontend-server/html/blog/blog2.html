@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nginx và cái dấu gạch chéo – MyMiniCloud</title>
+<meta name="description" content="Trang /blog/ báo 404 suốt một buổi tối, và thủ phạm chỉ là một ký tự.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<div class="strip"></div>
+<div class="wrap">
+<header class="site-header">
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="7" width="28" height="18" rx="2" fill="#2E5E82" stroke="#1C2733" stroke-width="2"/><g stroke="#1C2733" stroke-opacity=".35" stroke-width="2"><line x1="9" y1="9" x2="9" y2="23"/><line x1="14" y1="9" x2="14" y2="23"/><line x1="19" y1="9" x2="19" y2="23"/></g><rect x="22" y="9" width="6" height="14" fill="#F0B429"/></svg>MyMiniCloud</a>
+  <nav class="nav" aria-label="Điều hướng chính">
+    <a href="/">Trang chủ</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+  </nav>
+</header>
+
+<nav class="crumbs" aria-label="Vị trí hiện tại"><a href="/">Trang chủ</a> / <a href="/blog/">Blog</a></nav>
+<main>
+<header class="post-head">
+  <h1>Nginx và cái dấu gạch chéo</h1>
+  <p class="meta"><span><time datetime="2026-10-27">27 tháng 10, 2026</time></span><span>5 phút đọc</span></p>
+</header>
+
+<figure class="figure">
+  <img src="/blog/images/nginx.svg" alt="Sơ đồ trình duyệt gửi yêu cầu đến Nginx, Nginx đọc file trong thư mục html và trả trang về">
+  <figcaption>Một request đi từ trình duyệt vào container Nginx, rồi Nginx tìm file trong thư mục web.</figcaption>
+</figure>
+
+<article class="post">
+<p>Trang chủ của mình lên rất suôn sẻ. Vậy mà vào <code>/blog/</code> thì Nginx trả về 404, dù file <code>index.html</code> nằm ngay đó. Mình ngồi nhìn nó gần cả buổi tối.</p>
+
+<h2>root và alias khác nhau thế nào?</h2>
+<p>Cả hai đều chỉ cho Nginx biết file nằm ở đâu, nhưng cách ghép đường dẫn thì khác:</p>
+<ul>
+  <li><code>root</code> nối nguyên đường dẫn URL vào sau thư mục gốc. URL <code>/blog/a.html</code> thành <code>{root}/blog/a.html</code>.</li>
+  <li><code>alias</code> thay phần khớp với <code>location</code> bằng đường dẫn mới. URL <code>/blog/a.html</code> thành <code>{alias}a.html</code>.</li>
+</ul>
+<p>Vì <code>alias</code> thay thế chứ không nối thêm, nên dấu gạch chéo ở cuối mới quan trọng đến vậy.</p>
+
+<h2>Cái bẫy</h2>
+<p>Mình viết như sau, và nó sai:</p>
+<pre><code>location ^~ /blog/ {
+    alias /usr/share/nginx/html/blog;   # thiếu dấu / ở cuối
+}</code></pre>
+<p>Khi trình duyệt xin <code>/blog/index.html</code>, Nginx cắt <code>/blog/</code> đi rồi ghép phần còn lại vào sau <code>.../blog</code>. Kết quả là nó đi tìm file <code>.../blogindex.html</code>, tất nhiên không có. Chỉ cần thêm một dấu <code>/</code> là chạy:</p>
+<pre><code>location ^~ /blog/ {
+    alias /usr/share/nginx/html/blog/;
+    index index.html;
+}</code></pre>
+
+<h2>Cách mình tìm ra lỗi</h2>
+<p>Việc hữu ích nhất mình làm là đọc log, vì Nginx ghi rõ nó đã đi tìm file ở đường dẫn nào:</p>
+<pre><code>docker logs web-frontend-server
+docker exec web-frontend-server ls /usr/share/nginx/html/blog
+curl -I http://localhost:8080/blog/</code></pre>
+<p>Dòng lỗi <code>open() ... failed (2: No such file or directory)</code> kèm đường dẫn <code>blogindex.html</code> chính là manh mối. Nếu mình đọc log sớm hơn thì đã tiết kiệm được mấy tiếng.</p>
+
+<h2>Sửa HTML xong mà trang không đổi</h2>
+<div class="note">
+  <p>Website được chép vào image lúc build, nên sửa file trên máy chưa đủ. Phải build lại:</p>
+  <p><code>docker compose up -d --build web-frontend-server</code></p>
+  <p>Rồi nhấn Ctrl+F5, vì trình duyệt hay giữ bản cũ.</p>
+</div>
+</article>
+
+<nav class="post-nav" aria-label="Bài viết khác">
+  <div><small>Bài trước</small><a href="/blog/blog1.html">Docker là gì? Mình hiểu như sau</a></div>
+  <div><small>Bài sau</small><a href="/blog/blog3.html">Chín server trong một cái laptop</a></div>
+</nav>
+<p class="back"><a href="/">Quay lại trang chính</a></p>
+</main>
+<footer class="site-footer">
+  <p>Nguyễn Văn A, sinh viên môn Điện toán đám mây.</p>
+  <p>Trang này được Nginx trong container <code>web-frontend-server</code> phục vụ.</p>
+</footer>
+</div>
+</body>
+</html>

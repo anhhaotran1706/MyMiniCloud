@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chín server trong một cái laptop – MyMiniCloud</title>
+<meta name="description" content="Làm xong MyMiniCloud mình thấy AWS bớt bí ẩn: dịch vụ nào to đùng cũng có một bản thu nhỏ.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<div class="strip"></div>
+<div class="wrap">
+<header class="site-header">
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="7" width="28" height="18" rx="2" fill="#2E5E82" stroke="#1C2733" stroke-width="2"/><g stroke="#1C2733" stroke-opacity=".35" stroke-width="2"><line x1="9" y1="9" x2="9" y2="23"/><line x1="14" y1="9" x2="14" y2="23"/><line x1="19" y1="9" x2="19" y2="23"/></g><rect x="22" y="9" width="6" height="14" fill="#F0B429"/></svg>MyMiniCloud</a>
+  <nav class="nav" aria-label="Điều hướng chính">
+    <a href="/">Trang chủ</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+  </nav>
+</header>
+
+<nav class="crumbs" aria-label="Vị trí hiện tại"><a href="/">Trang chủ</a> / <a href="/blog/">Blog</a></nav>
+<main>
+<header class="post-head">
+  <h1>Chín server trong một cái laptop</h1>
+  <p class="meta"><span><time datetime="2026-11-03">3 tháng 11, 2026</time></span><span>5 phút đọc</span></p>
+</header>
+
+<figure class="figure">
+  <img src="/blog/images/cloud.svg" alt="Chín ô server xếp thành lưới ba nhân ba, nằm chung trong mạng cloud-net">
+  <figcaption>Chín server của MyMiniCloud, nối chung vào mạng cloud-net.</figcaption>
+</figure>
+
+<article class="post">
+<p>Đề bài của môn này là dựng một hệ thống cloud thu nhỏ gồm chín loại server, mỗi server chạy trong một container riêng. Làm xong mình mới thấy các dịch vụ của AWS bớt bí ẩn: cái nào cũng có một bản “mini” chạy được ngay trên laptop.</p>
+
+<h2>Mỗi server tương ứng với gì trên AWS?</h2>
+<p>Không có cái nào giống hệt, nhưng vai trò thì khá gần nhau:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Trong MyMiniCloud</th><th>Vai trò</th><th>Gần giống trên AWS</th></tr></thead>
+  <tbody>
+    <tr><td>Nginx (web)</td><td>Phục vụ trang web tĩnh</td><td>S3 static website hoặc EC2</td></tr>
+    <tr><td>Flask (app)</td><td>Xử lý API</td><td>Lambda hoặc ECS</td></tr>
+    <tr><td>MariaDB</td><td>Cơ sở dữ liệu quan hệ</td><td>RDS</td></tr>
+    <tr><td>Keycloak</td><td>Đăng nhập, cấp token</td><td>Cognito</td></tr>
+    <tr><td>MinIO</td><td>Lưu file theo bucket</td><td>S3</td></tr>
+    <tr><td>Bind9</td><td>Tên miền nội bộ</td><td>Route 53 private zone</td></tr>
+    <tr><td>Prometheus</td><td>Thu thập số liệu</td><td>CloudWatch</td></tr>
+    <tr><td>Grafana</td><td>Vẽ biểu đồ giám sát</td><td>Amazon Managed Grafana</td></tr>
+    <tr><td>Nginx (proxy)</td><td>Cổng vào duy nhất</td><td>Load balancer, API Gateway</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Thực ra trong file compose có thêm một container Node Exporter để Prometheus có số liệu mà lấy, nên đếm ra là mười container.</p>
+
+<h2>Chúng gọi nhau bằng cách nào?</h2>
+<p>Tất cả nối chung vào một mạng tên <code>cloud-net</code>. Trong mạng này, container gọi nhau bằng tên chứ không cần nhớ địa chỉ IP. Ví dụ proxy chuyển yêu cầu đến backend như sau:</p>
+<pre><code>proxy_pass http://application-backend-server:8081/;</code></pre>
+<p>Docker có sẵn một DNS nội bộ lo việc đổi tên thành địa chỉ. Hiểu ra điều này mình mới thấy vì sao đặt tên container cho cẩn thận lại quan trọng.</p>
+
+<h2>Mình học được gì</h2>
+<ul>
+  <li>Một hệ thống lớn thực chất là nhiều dịch vụ nhỏ, mỗi cái làm đúng một việc.</li>
+  <li>Cấu hình nằm trong file thì chép sang máy khác là chạy lại được. Đó là lý do người ta thích Docker Compose.</li>
+  <li>Khi lỗi, việc đầu tiên nên làm là đọc log, rồi mới đoán.</li>
+</ul>
+
+<h2>Còn dang dở</h2>
+<div class="note">
+  <p>Các tài khoản <code>admin/admin</code> chỉ dùng cho bài lab, ngoài đời thật tuyệt đối không được để vậy. Mình cũng chưa bật HTTPS. Việc tiếp theo là thử đưa cả hệ thống lên một máy EC2 và truy cập bằng địa chỉ IP công cộng.</p>
+</div>
+</article>
+
+<nav class="post-nav" aria-label="Bài viết khác">
+  <div><small>Bài trước</small><a href="/blog/blog2.html">Nginx và cái dấu gạch chéo</a></div>
+</nav>
+<p class="back"><a href="/">Quay lại trang chính</a></p>
+</main>
+<footer class="site-footer">
+  <p>Nguyễn Văn A, sinh viên môn Điện toán đám mây.</p>
+  <p>Trang này được Nginx trong container <code>web-frontend-server</code> phục vụ.</p>
+</footer>
+</div>
+</body>
+</html>

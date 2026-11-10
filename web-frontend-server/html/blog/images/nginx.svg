@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="t d">
+<title id="t">Đường đi của một request</title>
+<desc id="d">Trình duyệt gửi yêu cầu /blog/ đến Nginx, Nginx đọc file trong thư mục html/blog rồi trả trang về.</desc>
+<rect width="1200" height="675" fill="#F7EDC9"/>
+<g stroke="#E6D9A8" stroke-width="2"><line x1="0" y1="560" x2="1200" y2="560"/><line x1="0" y1="600" x2="1200" y2="600"/></g>
+
+<!-- trình duyệt -->
+<rect x="60" y="190" width="340" height="290" rx="10" fill="#fff" stroke="#1C2733" stroke-width="4"/>
+<path d="M60 200 a10 10 0 0 1 10 -10 h320 a10 10 0 0 1 10 10 v36 h-340 z" fill="#1C2733"/>
+<circle cx="84" cy="213" r="6" fill="#B8342F"/><circle cx="106" cy="213" r="6" fill="#F0B429"/><circle cx="128" cy="213" r="6" fill="#3F7D6B"/>
+<rect x="78" y="252" width="304" height="34" rx="6" fill="#EEF1F4"/>
+<text x="92" y="275" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="17" fill="#1C2733">localhost:8080/blog/</text>
+<rect x="84" y="316" width="180" height="16" rx="3" fill="#1C2733"/>
+<rect x="84" y="348" width="270" height="10" rx="3" fill="#C9D1D9"/>
+<rect x="84" y="368" width="250" height="10" rx="3" fill="#C9D1D9"/>
+<rect x="84" y="388" width="262" height="10" rx="3" fill="#C9D1D9"/>
+<rect x="84" y="420" width="120" height="30" rx="4" fill="#F0B429"/>
+<text x="230" y="520" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="24" font-weight="700" fill="#1C2733" text-anchor="middle">Trình duyệt</text>
+
+<!-- mũi tên request / response -->
+<line x1="410" y1="300" x2="508" y2="300" stroke="#1C2733" stroke-width="4"/><path d="M520 300 l-14 -8 v16 z" fill="#1C2733"/>
+<line x1="520" y1="370" x2="422" y2="370" stroke="#3F7D6B" stroke-width="4" stroke-dasharray="9 7"/><path d="M410 370 l14 -8 v16 z" fill="#3F7D6B"/>
+<text x="466" y="282" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="18" fill="#1C2733" text-anchor="middle">GET /blog/</text>
+<text x="466" y="406" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="18" fill="#3F7D6B" text-anchor="middle">200 OK</text>
+
+<!-- nginx -->
+<rect x="530" y="190" width="240" height="290" rx="14" fill="#2E5E82" stroke="#1C2733" stroke-width="4"/>
+<rect x="556" y="222" width="188" height="40" rx="6" fill="#1C2733"/>
+<circle cx="578" cy="242" r="7" fill="#3F7D6B"/>
+<rect x="556" y="276" width="188" height="40" rx="6" fill="#1C2733"/>
+<circle cx="578" cy="296" r="7" fill="#3F7D6B"/>
+<text x="650" y="372" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="44" font-weight="800" fill="#fff" text-anchor="middle">nginx</text>
+<text x="650" y="410" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="20" fill="#CFE0EC" text-anchor="middle">cổng 80</text>
+<text x="650" y="520" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="24" font-weight="700" fill="#1C2733" text-anchor="middle">Container web</text>
+
+<!-- mũi tên alias -->
+<line x1="780" y1="335" x2="838" y2="335" stroke="#1C2733" stroke-width="4"/><path d="M850 335 l-14 -8 v16 z" fill="#1C2733"/>
+<text x="815" y="312" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="17" fill="#1C2733" text-anchor="middle">alias</text>
+
+<!-- thư mục -->
+<rect x="860" y="190" width="290" height="290" rx="10" fill="#fff" stroke="#1C2733" stroke-width="4"/>
+<path d="M860 200 a10 10 0 0 1 10 -10 h100 l18 22 h152 v-12" fill="none"/>
+<rect x="860" y="190" width="120" height="30" rx="8" fill="#F0B429" stroke="#1C2733" stroke-width="4"/>
+<text x="884" y="262" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="20" fill="#1C2733">html/</text>
+<text x="906" y="300" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="20" fill="#1C2733">index.html</text>
+<text x="906" y="338" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="20" fill="#1C2733">blog/</text>
+<text x="950" y="376" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="20" fill="#2E5E82" font-weight="700">index.html</text>
+<text x="950" y="414" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="20" fill="#1C2733">blog1.html</text>
+<text x="950" y="452" font-family="Consolas, Menlo, 'Courier New', monospace" font-size="20" fill="#1C2733">images/</text>
+<text x="1005" y="520" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="24" font-weight="700" fill="#1C2733" text-anchor="middle">Thư mục web</text>
+</svg>

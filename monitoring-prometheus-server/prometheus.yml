@@ -1,0 +1,8 @@
+global: { scrape_interval: 15s }
+scrape_configs:
+  - job_name: 'node'
+    static_configs: [ { targets: ['monitoring-node-exporter-server:9100'] } ]
+  # [P2-7] Target mới: giám sát chính web-frontend-server
+  - job_name: 'web'
+    static_configs:
+      - targets: ['web-frontend-server:80']

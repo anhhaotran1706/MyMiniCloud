@@ -1,0 +1,23 @@
+# MinIO runtime data directory
+object-storage-server/data/*
+!object-storage-server/data/.gitkeep
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.local
+
+# OS / Editor temporary files
+~$*.docx
+~$*.xlsx
+~$*.pptx
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docker là gì? Mình hiểu như sau – MyMiniCloud</title>
+<meta name="description" content="Cài Docker xong, chạy thử một dòng lệnh, rồi ngồi nghĩ mãi vì sao nó khác máy ảo.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<div class="strip"></div>
+<div class="wrap">
+<header class="site-header">
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="7" width="28" height="18" rx="2" fill="#2E5E82" stroke="#1C2733" stroke-width="2"/><g stroke="#1C2733" stroke-opacity=".35" stroke-width="2"><line x1="9" y1="9" x2="9" y2="23"/><line x1="14" y1="9" x2="14" y2="23"/><line x1="19" y1="9" x2="19" y2="23"/></g><rect x="22" y="9" width="6" height="14" fill="#F0B429"/></svg>MyMiniCloud</a>
+  <nav class="nav" aria-label="Điều hướng chính">
+    <a href="/">Trang chủ</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+  </nav>
+</header>
+
+<nav class="crumbs" aria-label="Vị trí hiện tại"><a href="/">Trang chủ</a> / <a href="/blog/">Blog</a></nav>
+<main>
+<header class="post-head">
+  <h1>Docker là gì? Mình hiểu như sau</h1>
+  <p class="meta"><span><time datetime="2026-10-20">20 tháng 10, 2026</time></span><span>4 phút đọc</span></p>
+</header>
+
+<figure class="figure">
+  <img src="/blog/images/docker.svg" alt="Tàu chở hàng xếp nhiều container màu sắc, cần cẩu đang nhấc thêm một container">
+  <figcaption>Docker lấy hình ảnh từ chính những chiếc container ngoài cảng: thùng nào cũng cùng kích cỡ, bên trong chứa gì cũng được.</figcaption>
+</figure>
+
+<article class="post">
+<p>Trước môn này, câu mình nói nhiều nhất với bạn cùng nhóm là “trên máy mình chạy được mà”. Docker sinh ra để chấm dứt đúng câu đó, nên mình nghĩ nó đáng để hiểu cho đàng hoàng.</p>
+
+<h2>Container giống cái gì?</h2>
+<p>Cảng biển không cần biết trong thùng hàng có gì. Thùng nào cũng cùng kích cỡ, cần cẩu nào cũng nhấc được, tàu nào cũng chở được. Docker làm điều tương tự với phần mềm: nó đóng ứng dụng cùng thư viện, phiên bản và cấu hình vào một “thùng”. Máy nào có Docker thì mở thùng ra là chạy giống hệt nhau.</p>
+
+<h2>Image và container khác nhau chỗ nào?</h2>
+<p>Đây là chỗ mình lẫn mất một lúc. Cuối cùng mình nhớ thế này:</p>
+<ul>
+  <li><strong>Image</strong> là bản đóng gói, chỉ để đọc, giống file cài đặt của một phần mềm.</li>
+  <li><strong>Container</strong> là một lần chạy cụ thể từ image đó. Từ một image có thể chạy ra nhiều container.</li>
+</ul>
+<p>Thử ngay bằng Nginx, bốn lệnh là đủ:</p>
+<pre><code>docker pull nginx:stable
+docker run -d --name thu-nghiem -p 8080:80 nginx:stable
+docker ps
+docker rm -f thu-nghiem</code></pre>
+<p>Sau lệnh <code>run</code>, mở <code>localhost:8080</code> là thấy trang chào của Nginx. Lệnh cuối xóa container đi, còn image vẫn nằm trong máy.</p>
+
+<h2>Vậy nó khác máy ảo ở đâu?</h2>
+<p>Máy ảo mang theo cả một hệ điều hành riêng, nên nặng và khởi động lâu. Container dùng chung nhân hệ điều hành của máy chủ, chỉ tách biệt phần ứng dụng, nên nhẹ hơn nhiều và bật lên trong vài giây. Đổi lại, mức cô lập của nó không chặt bằng máy ảo.</p>
+
+<h2>Ba lỗi mình đã gặp</h2>
+<div class="note">
+  <ol>
+    <li>Gõ <code>docker</code> mà báo không kết nối được daemon. Lý do rất ngớ ngẩn: mình chưa mở Docker Desktop.</li>
+    <li>Tạo file tên <code>Dockerfile</code> nhưng Windows âm thầm lưu thành <code>Dockerfile.txt</code>. Phải bật hiển thị đuôi file mới thấy.</li>
+    <li>Cổng 8080 đang bị chương trình khác chiếm. Mình đổi thành <code>8088:80</code> là xong.</li>
+  </ol>
+</div>
+<p>Bài sau mình kể chuyện Nginx và một ký tự làm mình mất trọn một buổi tối.</p>
+</article>
+
+<nav class="post-nav" aria-label="Bài viết khác">
+  <div></div>
+  <div><small>Bài sau</small><a href="/blog/blog2.html">Nginx và cái dấu gạch chéo</a></div>
+</nav>
+<p class="back"><a href="/">Quay lại trang chính</a></p>
+</main>
+<footer class="site-footer">
+  <p>Nguyễn Văn A, sinh viên môn Điện toán đám mây.</p>
+  <p>Trang này được Nginx trong container <code>web-frontend-server</code> phục vụ.</p>
+</footer>
+</div>
+</body>
+</html>

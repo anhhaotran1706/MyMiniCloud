@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyMiniCloud – Home</title>
+<meta name="description" content="Nhật ký học điện toán đám mây của một sinh viên.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<div class="strip"></div>
+<div class="wrap">
+<header class="site-header">
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="7" width="28" height="18" rx="2" fill="#2E5E82" stroke="#1C2733" stroke-width="2"/><g stroke="#1C2733" stroke-opacity=".35" stroke-width="2"><line x1="9" y1="9" x2="9" y2="23"/><line x1="14" y1="9" x2="14" y2="23"/><line x1="19" y1="9" x2="19" y2="23"/></g><rect x="22" y="9" width="6" height="14" fill="#F0B429"/></svg>MyMiniCloud</a>
+  <nav class="nav" aria-label="Điều hướng chính">
+    <a href="/" aria-current="page">Trang chủ</a>
+    <a href="/blog/">Blog</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <h1>MyMiniCloud – Home</h1>
+  <p class="lead">Mình là Nguyễn Văn A, sinh viên năm ba. Đây là nhật ký môn Điện toán đám mây: những gì mình làm được, và cả những chỗ làm hỏng.</p>
+  <p class="lead">Cả trang này chạy trong một container Nginx, nằm trong một cái “cloud” thu nhỏ mình dựng ngay trên laptop.</p>
+</section>
+
+<section aria-labelledby="moi">
+  <h2 class="section-title" id="moi">Bài viết mới</h2>
+  <article class="entry">
+    <a class="entry-img" href="/blog/blog3.html" tabindex="-1" aria-hidden="true"><img src="/blog/images/cloud.svg" alt="" loading="lazy"></a>
+    <div class="entry-body">
+      <p class="meta"><span><time datetime="2026-11-03">3 tháng 11, 2026</time></span><span>5 phút đọc</span></p>
+      <h3><a href="/blog/blog3.html">Chín server trong một cái laptop</a></h3>
+      <p>Làm xong MyMiniCloud mình thấy AWS bớt bí ẩn: dịch vụ nào to đùng cũng có một bản thu nhỏ.</p>
+    </div>
+  </article>
+  <article class="entry">
+    <a class="entry-img" href="/blog/blog2.html" tabindex="-1" aria-hidden="true"><img src="/blog/images/nginx.svg" alt="" loading="lazy"></a>
+    <div class="entry-body">
+      <p class="meta"><span><time datetime="2026-10-27">27 tháng 10, 2026</time></span><span>5 phút đọc</span></p>
+      <h3><a href="/blog/blog2.html">Nginx và cái dấu gạch chéo</a></h3>
+      <p>Trang /blog/ báo 404 suốt một buổi tối, và thủ phạm chỉ là một ký tự.</p>
+    </div>
+  </article>
+  <article class="entry">
+    <a class="entry-img" href="/blog/blog1.html" tabindex="-1" aria-hidden="true"><img src="/blog/images/docker.svg" alt="" loading="lazy"></a>
+    <div class="entry-body">
+      <p class="meta"><span><time datetime="2026-10-20">20 tháng 10, 2026</time></span><span>4 phút đọc</span></p>
+      <h3><a href="/blog/blog1.html">Docker là gì? Mình hiểu như sau</a></h3>
+      <p>Cài Docker xong, chạy thử một dòng lệnh, rồi ngồi nghĩ mãi vì sao nó khác máy ảo.</p>
+    </div>
+  </article>
+
+  <p class="more"><a href="/blog/">Xem tất cả bài viết</a></p>
+</section>
+</main>
+<footer class="site-footer">
+  <p>Nguyễn Văn A, sinh viên môn Điện toán đám mây.</p>
+  <p>Trang này được Nginx trong container <code>web-frontend-server</code> phục vụ.</p>
+</footer>
+</div>
+</body>
+</html>

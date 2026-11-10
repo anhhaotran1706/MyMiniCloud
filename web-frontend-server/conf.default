@@ -1,0 +1,20 @@
+server {
+  listen 80;
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / { try_files $uri $uri/ =404; }
+
+  location ^~ /blog/ {
+    alias /usr/share/nginx/html/blog/;
+    index index.html;
+    autoindex off;
+  }
+
+  # Endpoint /metrics để Prometheus scrape target "web" ra UP
+  location = /metrics {
+    default_type text/plain;
+    return 200 "# HELP web_up Web frontend is up\n# TYPE web_up gauge\nweb_up 1\n";
+  }
+}
