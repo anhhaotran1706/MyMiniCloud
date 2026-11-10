@@ -452,3 +452,4 @@ docker push <username_dockerhub>/myminicloud-web:v1.0
 8. **Minh chứng 8:** Dashboard Grafana 3 biểu đồ CPU, RAM, Network Traffic có dữ liệu.
 9. **Minh chứng 9:** Kết quả lệnh `curl http://localhost/student/` qua Gateway.
 10. **Minh chứng 10:** Kết quả lệnh curl luân phiên `SERVER 1` và `SERVER 2` tại endpoint `/lb/`.
+# final-cloud-computing
