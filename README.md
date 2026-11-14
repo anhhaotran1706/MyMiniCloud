@@ -403,10 +403,10 @@ Trước khi nộp bài hoặc đem đi chấm, bạn có thể nhanh chóng đ�
 docker login
 
 # 2. Gắn tag image với tài khoản Docker Hub của bạn
-docker tag hotensv/web:dev <username_dockerhub>/myminicloud-web:v1.0
+docker tag anhhaotran113/web:dev trananhhao/myminicloud-web:v1.0
 
 # 3. Đẩy image lên kho lưu trữ
-docker push <username_dockerhub>/myminicloud-web:v1.0
+docker push anhhaotran113/myminicloud-web:v1.0
 ```
 
 ### 9.2. Triển khai toàn bộ trên AWS EC2 (Ubuntu)

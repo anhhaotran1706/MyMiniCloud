@@ -8,7 +8,7 @@ services:
   # ───────────────────────────────────────────────────────────────
   web-frontend-server:
     build: ./web-frontend-server
-    image: hotensv/web:dev
+    image: anhhaotran113/myminicloud-web:dev
     container_name: web-frontend-server
     networks: [cloud-net]
     ports: [ "8080:80" ]
@@ -40,7 +40,7 @@ services:
   # ───────────────────────────────────────────────────────────────
   application-backend-server:
     build: ./application-backend-server
-    image: hotensv/app:dev
+    image: anhhaotran113/myminicloud-app:dev
     container_name: application-backend-server
     networks: [cloud-net]
     ports: [ "8085:8081" ]
