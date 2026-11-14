@@ -390,7 +390,7 @@ Trước khi nộp bài hoặc đem đi chấm, bạn có thể nhanh chóng đ�
 |---|---|
 | `realm_sv001` -> Realm theo MSSV của bạn | `authentication-identity-server/realm-export.json`, `docker-compose.yml` (3 chỗ), `application-backend-server/app.py` |
 | `SV001` -> MSSV của bạn | `monitoring-grafana-dashboard-server/provisioning/dashboards/system-health.json`, `relational-database-server/init/002_studentdb.sql` |
-| `Nguyễn Văn A` -> Họ tên của bạn | Các tệp `.html` trong `web-frontend-server/html/` |
+| `Trần Anh Hào / Hà Nam Anh / Bùi Châu Hải Đăng` -> Họ tên của bạn | Các tệp `.html` trong `web-frontend-server/html/` |
 | Ảnh đại diện & Báo cáo PDF mẫu | Thay file `object-storage-server/seed/avatar.jpg` và `baocao.pdf` bằng ảnh và PDF của bạn |
 
 ---

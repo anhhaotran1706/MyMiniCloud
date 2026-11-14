@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS students (
 );
 
 INSERT INTO students (student_id, fullname, dob, major) VALUES
-  ('SV001', 'Nguyễn Văn An',  '2004-03-12', 'Khoa học máy tính'),
+  ('SV001', 'Trần Anh Hào',  '2004-03-12', 'Khoa học máy tính'),
   ('SV002', 'Trần Thị Bình',  '2004-07-25', 'Kỹ thuật phần mềm'),
   ('SV003', 'Lê Hoàng Cường', '2003-11-02', 'Mạng máy tính'),
   ('SV004', 'Phạm Minh Dũng', '2004-01-18', 'Khoa học dữ liệu'),

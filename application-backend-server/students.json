@@ -1,5 +1,5 @@
 [
-  {"id": 1, "name": "Nguyễn Văn An",   "major": "Khoa học máy tính",   "gpa": 3.45},
+  {"id": 1, "name": "Trần Anh Hào",   "major": "Khoa học máy tính",   "gpa": 3.45},
   {"id": 2, "name": "Trần Thị Bình",   "major": "Kỹ thuật phần mềm",   "gpa": 3.72},
   {"id": 3, "name": "Lê Hoàng Cường",  "major": "Mạng máy tính",       "gpa": 3.10},
   {"id": 4, "name": "Phạm Minh Dũng",  "major": "Khoa học dữ liệu",    "gpa": 3.58},
